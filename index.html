@@ -29,7 +29,12 @@ window.onunhandledrejection = function(event) {
 </script>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#10b981">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <title>សៀវភៅហិរញ្ញវត្ថុ - កម្មវិធីគ្រប់គ្រងហិរញ្ញវត្ថុផ្ទាល់ខ្លួន</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -449,18 +454,18 @@ window.onunhandledrejection = function(event) {
     </main>
 
     <!-- Mobile Bottom Navigation Bar -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 glass-panel border-t border-slate-200 dark:border-slate-800 flex justify-around py-3 px-2 z-40 pb-safe">
-        <button onclick="switchTab('dashboard')" id="mob-nav-dashboard" class="flex flex-col items-center space-y-1 text-emerald-500 transition-transform hover:scale-110"><i class="fa-solid fa-chart-pie text-xl"></i><span class="text-[10px] font-medium">ផ្ទាំងគ្រប់គ្រង</span></button>
-        <button onclick="switchTab('transactions')" id="mob-nav-transactions" class="flex flex-col items-center space-y-1 text-slate-400 dark:text-slate-500 transition-transform hover:scale-110"><i class="fa-solid fa-list-check text-xl"></i><span class="text-[10px] font-medium">ប្រតិបត្តិការ</span></button>
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex justify-around items-center py-2 px-2 z-40 pb-safe shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+        <button onclick="switchTab('dashboard')" id="mob-nav-dashboard" class="flex flex-col items-center justify-center w-16 h-12 space-y-1 text-emerald-500 transition-transform hover:scale-110"><i class="fa-solid fa-chart-pie text-[22px]"></i><span class="text-[10px] font-medium mt-1">គ្រប់គ្រង</span></button>
+        <button onclick="switchTab('transactions')" id="mob-nav-transactions" class="flex flex-col items-center justify-center w-16 h-12 space-y-1 text-slate-400 dark:text-slate-500 transition-transform hover:scale-110"><i class="fa-solid fa-list-check text-[22px]"></i><span class="text-[10px] font-medium mt-1">ប្រតិបត្តិការ</span></button>
         
-        <div class="relative -top-6">
-            <button onclick="openTransactionModal()" class="h-14 w-14 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/40 border-4 border-slate-50 dark:border-slate-950 transition-transform hover:scale-110">
+        <div class="relative -top-5 flex justify-center w-16">
+            <button onclick="openTransactionModal()" class="h-14 w-14 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/40 border-[3px] border-white dark:border-slate-950 transition-transform hover:scale-105 active:scale-95">
                 <i class="fa-solid fa-plus text-2xl"></i>
             </button>
         </div>
 
-        <button onclick="switchTab('budgets')" id="mob-nav-budgets" class="flex flex-col items-center space-y-1 text-slate-400 dark:text-slate-500 transition-transform hover:scale-110"><i class="fa-solid fa-bullseye text-xl"></i><span class="text-[10px] font-medium">ថវិកា</span></button>
-        <button onclick="switchTab('categories')" id="mob-nav-categories" class="flex flex-col items-center space-y-1 text-slate-400 dark:text-slate-500 transition-transform hover:scale-110"><i class="fa-solid fa-tags text-xl"></i><span class="text-[10px] font-medium">ប្រភេទ</span></button>
+        <button onclick="switchTab('budgets')" id="mob-nav-budgets" class="flex flex-col items-center justify-center w-16 h-12 space-y-1 text-slate-400 dark:text-slate-500 transition-transform hover:scale-110"><i class="fa-solid fa-bullseye text-[22px]"></i><span class="text-[10px] font-medium mt-1">ថវិកា</span></button>
+        <button onclick="switchTab('categories')" id="mob-nav-categories" class="flex flex-col items-center justify-center w-16 h-12 space-y-1 text-slate-400 dark:text-slate-500 transition-transform hover:scale-110"><i class="fa-solid fa-tags text-[22px]"></i><span class="text-[10px] font-medium mt-1">ប្រភេទ</span></button>
     </nav>
 
     <!-- MODAL: Transaction -->
