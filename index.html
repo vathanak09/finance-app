@@ -184,10 +184,10 @@ window.onunhandledrejection = function(event) {
         </header>
 
         <!-- VIEW 1: Dashboard -->
-        <div id="view-dashboard" class="view-panel p-4 md:p-10 space-y-6 flex-1 animate-fade-in">
+        <div id="view-dashboard" class="view-panel p-3 md:p-10 space-y-2 md:space-y-3 md:space-y-6 flex-1 animate-fade-in">
             
             <!-- Top Filter Bar -->
-            <div class="glass-panel p-4 rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4" data-html2canvas-ignore>
+            <div class="glass-panel p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4" data-html2canvas-ignore>
                 
                 <!-- Left: Time Filter -->
                 <div class="flex flex-wrap items-center gap-3">
@@ -226,7 +226,7 @@ window.onunhandledrejection = function(event) {
             <!-- Summary Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <!-- Balance Card -->
-                <div class="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-900 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden transform transition-all hover:-translate-y-1">
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-900 p-4 md:p-6 rounded-2xl md:rounded-3xl text-white shadow-xl relative overflow-hidden transform transition-all hover:-translate-y-1">
                     <div class="absolute -right-4 -bottom-4 opacity-10 text-white"><i class="fa-solid fa-scale-balanced text-[140px]"></i></div>
                     <span class="text-sm font-medium text-slate-400 bg-slate-800/50 px-3 py-1 rounded-full backdrop-blur-sm">សមតុល្យលុយសរុប</span>
                     <div class="mt-4 space-y-1">
@@ -235,7 +235,7 @@ window.onunhandledrejection = function(event) {
                 </div>
 
                 <!-- Income Card -->
-                <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/40 dark:to-emerald-800/40 p-6 rounded-3xl shadow-sm border border-emerald-200 dark:border-emerald-700/50 relative overflow-hidden transform transition-all hover:-translate-y-1">
+                <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/40 dark:to-emerald-800/40 p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border border-emerald-200 dark:border-emerald-700/50 relative overflow-hidden transform transition-all hover:-translate-y-1">
                     <div class="absolute -right-4 -bottom-4 opacity-10 dark:opacity-20 text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-circle-arrow-down text-[140px]"></i></div>
                     <span class="text-sm font-bold text-emerald-700 dark:text-emerald-300 bg-white/60 dark:bg-slate-900/40 px-3 py-1 rounded-full backdrop-blur-sm">ចំណូលសរុប</span>
                     <div class="mt-4 space-y-1">
@@ -244,7 +244,7 @@ window.onunhandledrejection = function(event) {
                 </div>
 
                 <!-- Expense Card -->
-                <div class="bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/40 dark:to-rose-800/40 p-6 rounded-3xl shadow-sm border border-rose-200 dark:border-rose-700/50 relative overflow-hidden transform transition-all hover:-translate-y-1">
+                <div class="bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/40 dark:to-rose-800/40 p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border border-rose-200 dark:border-rose-700/50 relative overflow-hidden transform transition-all hover:-translate-y-1">
                     <div class="absolute -right-4 -bottom-4 opacity-10 dark:opacity-20 text-rose-600 dark:text-rose-400"><i class="fa-solid fa-circle-arrow-up text-[140px]"></i></div>
                     <span class="text-sm font-bold text-rose-700 dark:text-rose-300 bg-white/60 dark:bg-slate-900/40 px-3 py-1 rounded-full backdrop-blur-sm">ចំណាយសរុប</span>
                     <div class="mt-4 space-y-1">
@@ -253,7 +253,7 @@ window.onunhandledrejection = function(event) {
                 </div>
             </div>
 
-            <div class="glass-panel p-6 rounded-3xl shadow-sm">
+            <div class="glass-panel p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm">
                 <div class="mb-6">
                     <h4 class="font-bold text-slate-900 dark:text-white text-lg">ការវិភាគក្រាហ្វិក</h4>
                     <p class="text-[10px] text-slate-400 mt-1 italic">* ចំណាំ៖ លេខនៅបញ្ឈរខាងឆ្វេងនៃក្រាហ្វិកត្រូវបានបង្រួម (K = ពាន់, M = លាន, ម៉ឺន = ដប់ពាន់)</p>
@@ -290,9 +290,9 @@ window.onunhandledrejection = function(event) {
         </div>
 
         <!-- VIEW 2: Transactions -->
-        <div id="view-transactions" class="view-panel p-4 md:p-10 space-y-6 flex-1 hidden animate-fade-in">
+        <div id="view-transactions" class="view-panel p-3 md:p-10 space-y-2 md:space-y-3 md:space-y-6 flex-1 hidden animate-fade-in">
             
-            <div class="glass-panel p-4 rounded-2xl shadow-sm flex flex-wrap items-center gap-3">
+            <div class="glass-panel p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm flex flex-wrap items-center gap-3">
                 <div class="flex items-center space-x-2">
                     <div class="h-8 w-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center"><i class="fa-solid fa-filter"></i></div>
                     <span class="text-sm font-bold text-slate-700 dark:text-slate-300">តម្រង៖</span>
@@ -312,7 +312,7 @@ window.onunhandledrejection = function(event) {
                 </div>
             </div>
 
-            <div class="glass-panel p-5 rounded-3xl shadow-sm flex flex-col space-y-4 md:space-y-0 md:flex-row md:items-center md:justify-between md:space-x-4">
+            <div class="glass-panel p-3 md:p-5 rounded-2xl md:rounded-3xl shadow-sm flex flex-col space-y-2 md:space-y-3 md:space-y-0 md:flex-row md:items-center md:justify-between md:space-x-4">
                 <div class="flex flex-wrap items-center gap-3 flex-1">
                     <div class="relative flex-1 min-w-[150px]">
                         <i class="fa-solid fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
@@ -345,7 +345,7 @@ window.onunhandledrejection = function(event) {
             </div>
 
             <!-- Filtered Summary Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
                 <div class="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-2xl border border-emerald-100 dark:border-emerald-800/50">
                     <p class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">ចំណូល (KHR)</p>
                     <h4 class="text-lg font-black text-emerald-600 dark:text-emerald-400" id="filter-inc-khr">0 ៛</h4>
@@ -383,8 +383,8 @@ window.onunhandledrejection = function(event) {
         </div>
 
         <!-- VIEW 3: Budgets -->
-        <div id="view-budgets" class="view-panel p-4 md:p-10 space-y-6 flex-1 hidden animate-fade-in">
-            <div class="flex items-center justify-between glass-panel p-6 rounded-3xl shadow-sm">
+        <div id="view-budgets" class="view-panel p-3 md:p-10 space-y-2 md:space-y-3 md:space-y-6 flex-1 hidden animate-fade-in">
+            <div class="flex items-center justify-between glass-panel p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm">
                 <div>
                     <h3 class="font-bold text-slate-900 dark:text-white text-lg">កញ្ចប់ថវិកាចំណាយ</h3>
                     <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">គ្រប់គ្រងការចំណាយកុំឱ្យហួសពីផែនការ</p>
@@ -393,12 +393,12 @@ window.onunhandledrejection = function(event) {
                     <i class="fa-solid fa-circle-plus"></i><span>កំណត់ថវិកាថ្មី</span>
                 </button>
             </div>
-            <div id="budgets-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div id="budgets-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6"></div>
         </div>
 
         <!-- VIEW 4: Categories -->
-        <div id="view-categories" class="view-panel p-4 md:p-10 space-y-6 flex-1 hidden animate-fade-in">
-            <div class="flex items-center justify-between glass-panel p-6 rounded-3xl shadow-sm">
+        <div id="view-categories" class="view-panel p-3 md:p-10 space-y-2 md:space-y-3 md:space-y-6 flex-1 hidden animate-fade-in">
+            <div class="flex items-center justify-between glass-panel p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm">
                 <div>
                     <h3 class="font-bold text-slate-900 dark:text-white text-lg">ប្រភេទចំណូលចំណាយ</h3>
                     <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">រៀបចំប្រភេទចំណាត់ថ្នាក់តាមតម្រូវការ</p>
@@ -411,7 +411,7 @@ window.onunhandledrejection = function(event) {
         </div>
 
         <!-- VIEW 5: INFO / ABOUT -->
-        <div id="view-info" class="view-panel p-4 md:p-10 space-y-6 flex-1 hidden animate-fade-in">
+        <div id="view-info" class="view-panel p-3 md:p-10 space-y-2 md:space-y-3 md:space-y-6 flex-1 hidden animate-fade-in">
             <div class="glass-panel p-8 rounded-3xl shadow-sm text-center max-w-2xl mx-auto mt-10">
                 <div class="h-20 w-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/30">
                     <i class="fa-solid fa-code text-white text-3xl"></i>
@@ -422,7 +422,7 @@ window.onunhandledrejection = function(event) {
                 <div class="text-left space-y-6">
                     <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 pb-2">របៀបប្រើប្រាស់ (How to use)</h3>
                     
-                    <div class="space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                    <div class="space-y-2 md:space-y-4 text-sm text-slate-600 dark:text-slate-300">
                         <div class="flex items-start space-x-3">
                             <div class="mt-1 text-emerald-500"><i class="fa-solid fa-chart-pie"></i></div>
                             <div>
@@ -475,7 +475,7 @@ window.onunhandledrejection = function(event) {
                 <h3 id="transaction-modal-title" class="font-extrabold text-lg text-slate-800 dark:text-white">បន្ថែមប្រតិបត្តិការថ្មី</h3>
                 <button onclick="closeTransactionModal()" class="h-8 w-8 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-300 hover:bg-rose-100 hover:text-rose-500 transition-colors"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form id="transaction-form" onsubmit="saveTransaction(event)" class="p-6 space-y-5">
+            <form id="transaction-form" onsubmit="saveTransaction(event)" class="p-4 md:p-6 space-y-2 md:space-y-3 md:space-y-5">
                 <input type="hidden" id="transaction-id">
                 
                 <div class="bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl flex relative">
@@ -534,7 +534,7 @@ window.onunhandledrejection = function(event) {
                 <h3 id="category-modal-title" class="font-extrabold text-lg text-slate-800 dark:text-white">បង្កើតប្រភេទថ្មី</h3>
                 <button onclick="closeCategoryModal()" class="h-8 w-8 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-300 hover:bg-rose-100 hover:text-rose-500 transition-colors"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form onsubmit="saveCategory(event)" class="p-6 space-y-5">
+            <form onsubmit="saveCategory(event)" class="p-4 md:p-6 space-y-2 md:space-y-3 md:space-y-5">
                 <input type="hidden" id="cat-id">
                 <div>
                     <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">ឈ្មោះប្រភេទ</label>
@@ -591,7 +591,7 @@ window.onunhandledrejection = function(event) {
                 <h3 id="budget-modal-title" class="font-extrabold text-lg text-slate-800 dark:text-white">កំណត់ថវិកាថ្មី</h3>
                 <button onclick="closeBudgetModal()" class="h-8 w-8 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-300 hover:bg-rose-100 hover:text-rose-500 transition-colors"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form onsubmit="saveBudget(event)" class="p-6 space-y-5">
+            <form onsubmit="saveBudget(event)" class="p-4 md:p-6 space-y-2 md:space-y-3 md:space-y-5">
                 <input type="hidden" id="budget-id">
                 
                 <div>
@@ -1292,7 +1292,7 @@ window.onunhandledrejection = function(event) {
                 }
 
                 container.innerHTML += `
-                    <div class="glass-panel p-6 rounded-3xl shadow-sm relative transform transition-all hover:-translate-y-1">
+                    <div class="glass-panel p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm relative transform transition-all hover:-translate-y-1">
                         <div class="absolute top-4 right-4 flex space-x-1">
                             <button onclick="editBudget('${b.id}')" class="text-slate-400 hover:text-emerald-500 transition-colors p-1"><i class="fa-solid fa-pen text-sm"></i></button>
                             <button onclick="deleteBudget('${b.id}')" class="text-slate-400 hover:text-rose-500 transition-colors p-1"><i class="fa-solid fa-trash text-sm"></i></button>
