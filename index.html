@@ -1283,11 +1283,11 @@ window.onunhandledrejection = function(event) {
             let totalInc = 0, totalExp = 0;
             
             if (viewMode === 'MERGED_KHR') {
-                totalInc = fIncKHR + (fIncUSD * EX_RATE);
-                totalExp = fExpKHR + (fExpUSD * EX_RATE);
+                totalInc = fIncKHR + (fIncUSD * EXCHANGE_RATE);
+                totalExp = fExpKHR + (fExpUSD * EXCHANGE_RATE);
             } else if (viewMode === 'MERGED_USD') {
-                totalInc = fIncUSD + (fIncKHR / EX_RATE);
-                totalExp = fExpUSD + (fExpKHR / EX_RATE);
+                totalInc = fIncUSD + (fIncKHR / EXCHANGE_RATE);
+                totalExp = fExpUSD + (fExpKHR / EXCHANGE_RATE);
             } else if (viewMode === 'KHR') {
                 totalInc = fIncKHR;
                 totalExp = fExpKHR;
