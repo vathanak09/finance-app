@@ -820,10 +820,10 @@ window.onunhandledrejection = function(event) {
             }
             
             document.querySelectorAll('nav.md\\:hidden button[id^="mob-nav-"]').forEach(b => {
-                b.className = "flex flex-col items-center space-y-1 text-slate-400 dark:text-slate-500 transition-transform hover:scale-110";
+                b.className = "flex flex-col items-center justify-center w-16 h-12 space-y-1 text-slate-400 dark:text-slate-500 transition-transform hover:scale-110";
             });
             if(document.getElementById('mob-nav-' + tabName)) {
-                document.getElementById('mob-nav-' + tabName).className = "flex flex-col items-center space-y-1 text-emerald-500 transition-transform hover:scale-110";
+                document.getElementById('mob-nav-' + tabName).className = "flex flex-col items-center justify-center w-16 h-12 space-y-1 text-emerald-500 transition-transform hover:scale-110";
             }
 
             const pdfBtn = document.getElementById('btn-download-pdf');
