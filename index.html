@@ -319,24 +319,27 @@ window.onunhandledrejection = function(event) {
                         <input type="text" id="filter-search" oninput="renderTransactionsList()" placeholder="ស្វែងរក..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
                     </div>
                     <select id="filter-type" onchange="renderTransactionsList()" class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm dark:text-white outline-none">
-                        <option value="all">លំហូរទាំងអស់</option>
-                        <option value="income">ចំណូល (+)</option>
-                        <option value="expense">ចំណាយ (-)</option>
+                        <option value="all">ទាំងអស់</option>
+                        <option value="income">ចំណូល</option>
+                        <option value="expense">ចំណាយ</option>
                     </select>
                     
-                    <!-- Multi-select for Categories -->
-                    <div class="relative group">
-                        <select id="filter-category" multiple onchange="renderTransactionsList()" class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm dark:text-white outline-none h-11 w-48 focus:h-auto focus:absolute focus:z-50 focus:shadow-xl transition-all" title="ចុច Ctrl ជាប់ដើម្បីរើសច្រើន">
-                            <!-- Populated by JS -->
-                        </select>
-                        <span class="absolute -top-2 right-2 bg-blue-100 text-blue-600 text-[8px] px-1 rounded hidden md:block">Ctrl សម្រាប់រើសច្រើន</span>
+                    <!-- Custom Dropdown for Categories -->
+                    <div class="relative" id="custom-category-dropdown">
+                        <button type="button" onclick="toggleCategoryDropdown(event)" class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm dark:text-white outline-none flex items-center justify-between min-w-[130px] transition-all hover:bg-slate-100 dark:hover:bg-slate-800">
+                            <span id="category-dropdown-text" class="truncate max-w-[100px]">គ្រប់ប្រភេទ</span>
+                            <i class="fa-solid fa-chevron-down ml-2 text-slate-400 text-xs"></i>
+                        </button>
+                        <div id="category-dropdown-menu" class="hidden absolute z-50 mt-2 w-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl max-h-64 overflow-y-auto p-2 left-0">
+                            <!-- JS will populate checkboxes here -->
+                        </div>
                     </div>
 
                     <select id="filter-sort" onchange="renderTransactionsList()" class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-semibold text-emerald-600 dark:text-emerald-400 outline-none">
-                        <option value="date-desc">តម្រៀប: ថ្មីមុន</option>
-                        <option value="date-asc">តម្រៀប: ចាស់មុន</option>
-                        <option value="amount-desc">តម្រៀប: ទឹកប្រាក់ច្រើនមុន</option>
-                        <option value="amount-asc">តម្រៀប: ទឹកប្រាក់តិចមុន</option>
+                        <option value="date-desc">ថ្មីមុន</option>
+                        <option value="date-asc">ចាស់មុន</option>
+                        <option value="amount-desc">ប្រាក់ច្រើនមុន</option>
+                        <option value="amount-asc">ប្រាក់តិចមុន</option>
                     </select>
                 </div>
                 <button onclick="exportExcel()" class="py-2.5 px-5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 font-bold rounded-xl text-sm flex items-center justify-center space-x-2 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors">
@@ -853,13 +856,81 @@ window.onunhandledrejection = function(event) {
             });
         }
 
+        let selectedFilterCategories = ['all'];
+        
+        function toggleCategoryDropdown(e) {
+            if(e) e.stopPropagation();
+            const menu = document.getElementById('category-dropdown-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        window.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('custom-category-dropdown');
+            const menu = document.getElementById('category-dropdown-menu');
+            if (dropdown && menu && !dropdown.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        function handleCategoryCheck(checkbox, id) {
+            if (id === 'all') {
+                if (checkbox.checked) {
+                    selectedFilterCategories = ['all'];
+                    document.querySelectorAll('.cat-filter-cb').forEach(cb => {
+                        if (cb.value !== 'all') cb.checked = false;
+                    });
+                } else {
+                    checkbox.checked = true; // Prevent unchecking all if nothing else is selected
+                }
+            } else {
+                if (checkbox.checked) {
+                    selectedFilterCategories = selectedFilterCategories.filter(c => c !== 'all');
+                    document.querySelector('.cat-filter-cb[value="all"]').checked = false;
+                    if (!selectedFilterCategories.includes(id)) selectedFilterCategories.push(id);
+                } else {
+                    selectedFilterCategories = selectedFilterCategories.filter(c => c !== id);
+                    if (selectedFilterCategories.length === 0) {
+                        selectedFilterCategories = ['all'];
+                        document.querySelector('.cat-filter-cb[value="all"]').checked = true;
+                    }
+                }
+            }
+            updateCategoryDropdownText();
+            renderTransactionsList();
+        }
+
+        function updateCategoryDropdownText() {
+            const textEl = document.getElementById('category-dropdown-text');
+            if (selectedFilterCategories.includes('all')) {
+                textEl.innerText = 'គ្រប់ប្រភេទ';
+            } else if (selectedFilterCategories.length === 1) {
+                const cat = state.categories.find(c => c.id === selectedFilterCategories[0]);
+                textEl.innerText = cat ? cat.name : 'រើសប្រភេទ';
+            } else {
+                textEl.innerText = `បានរើស (${selectedFilterCategories.length})`;
+            }
+        }
+
         function populateFilterCategories() {
-            const filterCat = document.getElementById('filter-category');
-            if (filterCat) {
-                filterCat.innerHTML = '<option value="all">គ្រប់ប្រភេទទាំងអស់</option>';
+            const menu = document.getElementById('category-dropdown-menu');
+            if (menu) {
+                let html = `
+                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer transition-colors">
+                        <input type="checkbox" value="all" onchange="handleCategoryCheck(this, 'all')" class="cat-filter-cb w-4 h-4 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500" ${selectedFilterCategories.includes('all') ? 'checked' : ''}>
+                        <span class="text-sm font-medium dark:text-slate-200">គ្រប់ប្រភេទ</span>
+                    </label>
+                `;
                 state.categories.forEach(cat => {
-                    filterCat.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                    const isChecked = selectedFilterCategories.includes(cat.id);
+                    html += `
+                        <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer transition-colors">
+                            <input type="checkbox" value="${cat.id}" onchange="handleCategoryCheck(this, '${cat.id}')" class="cat-filter-cb w-4 h-4 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500" ${isChecked ? 'checked' : ''}>
+                            <span class="text-sm dark:text-slate-200">${cat.name}</span>
+                        </label>
+                    `;
                 });
+                menu.innerHTML = html;
+                updateCategoryDropdownText();
             }
         }
 
@@ -917,8 +988,7 @@ window.onunhandledrejection = function(event) {
             const typeVal = document.getElementById('filter-type').value;
             const sortVal = document.getElementById('filter-sort').value;
             
-            const catSelect = document.getElementById('filter-category');
-            const selectedCats = Array.from(catSelect.selectedOptions).map(opt => opt.value);
+            const selectedCats = selectedFilterCategories;
 
             filtered = filtered.filter(tx => {
                 const matchSearch = (tx.description || '').toLowerCase().includes(searchVal);
