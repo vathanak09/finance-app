@@ -1279,10 +1279,28 @@ window.onunhandledrejection = function(event) {
                 }
             });
 
-            document.getElementById('filter-inc-usd').textContent = formatMoney(fIncUSD, 'USD');
-            document.getElementById('filter-exp-usd').textContent = formatMoney(fExpUSD, 'USD');
-            document.getElementById('filter-inc-khr').textContent = formatMoney(fIncKHR, 'KHR');
-            document.getElementById('filter-exp-khr').textContent = formatMoney(fExpKHR, 'KHR');
+            const viewMode = document.getElementById('trans-view-mode') ? document.getElementById('trans-view-mode').value : 'MERGED_KHR';
+            let totalInc = 0, totalExp = 0;
+            
+            if (viewMode === 'MERGED_KHR') {
+                totalInc = fIncKHR + (fIncUSD * EX_RATE);
+                totalExp = fExpKHR + (fExpUSD * EX_RATE);
+            } else if (viewMode === 'MERGED_USD') {
+                totalInc = fIncUSD + (fIncKHR / EX_RATE);
+                totalExp = fExpUSD + (fExpKHR / EX_RATE);
+            } else if (viewMode === 'KHR') {
+                totalInc = fIncKHR;
+                totalExp = fExpKHR;
+            } else if (viewMode === 'USD') {
+                totalInc = fIncUSD;
+                totalExp = fExpUSD;
+            }
+
+            const incEl = document.getElementById('filter-inc-total');
+            const expEl = document.getElementById('filter-exp-total');
+            
+            if(incEl) incEl.textContent = viewMode.includes('USD') ? `${totalInc.toLocaleString(undefined, {minimumFractionDigits: 2})}` : `${totalInc.toLocaleString()} ៛`;
+            if(expEl) expEl.textContent = viewMode.includes('USD') ? `${totalExp.toLocaleString(undefined, {minimumFractionDigits: 2})}` : `${totalExp.toLocaleString()} ៛`;
 
             tbody.innerHTML = '';
             if (filtered.length === 0) {
