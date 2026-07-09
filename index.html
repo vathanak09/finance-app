@@ -94,18 +94,7 @@ window.onunhandledrejection = function(event) {
 </head>
 <body class="h-full flex flex-col md:flex-row overflow-hidden bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300">
 
-    <div id="loading-overlay">
-        <div class="spinner mb-4"></div>
-        <h2 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-300">កំពុងដំណើរការទិន្នន័យ...</h2>
-        <p class="text-sm text-slate-400 mt-2">សូមរង់ចាំបន្តិច</p>
-    </div>
-
-    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-150%] transition-transform duration-500 glass-panel px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 max-w-sm pointer-events-none">
-        <div id="toast-icon-box" class="p-2 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl text-white shadow-lg">
-            <i id="toast-icon" class="fas fa-check-circle text-lg"></i>
-        </div>
-        <div><p id="toast-message" class="font-semibold text-sm dark:text-white">ជោគជ័យ!</p></div>
-    </div>
+    
 
     <!-- Desktop Sidebar -->
     <aside class="hidden md:flex flex-col w-72 bg-slate-900 text-slate-300 border-r border-slate-800 p-6 flex-shrink-0 relative overflow-hidden">
@@ -138,11 +127,11 @@ window.onunhandledrejection = function(event) {
             <button onclick="switchTab('transactions')" id="nav-transactions" class="nav-btn w-full flex items-center space-x-4 px-5 py-3.5 rounded-2xl transition-all duration-300 hover:bg-slate-800 hover:text-white font-medium">
                 <i class="fa-solid fa-list-check text-xl w-6"></i><span>ប្រតិបត្តិការ</span>
             </button>
-            <button onclick="switchTab('budgets')" id="nav-budgets" class="nav-btn w-full flex items-center space-x-4 px-5 py-3.5 rounded-2xl transition-all duration-300 hover:bg-slate-800 hover:text-white font-medium">
-                <i class="fa-solid fa-bullseye text-xl w-6"></i><span>កញ្ចប់ថវិកា</span>
+                        <button onclick="switchTab('reports')" id="nav-reports" class="nav-btn w-full flex items-center space-x-4 px-5 py-3.5 rounded-2xl transition-all duration-300 hover:bg-slate-800 hover:text-white font-medium">
+                <i class="fa-solid fa-chart-line text-xl w-6"></i><span>របាយការណ៍</span>
             </button>
-            <button onclick="switchTab('categories')" id="nav-categories" class="nav-btn w-full flex items-center space-x-4 px-5 py-3.5 rounded-2xl transition-all duration-300 hover:bg-slate-800 hover:text-white font-medium">
-                <i class="fa-solid fa-tags text-xl w-6"></i><span>ប្រភេទចំណូលចំណាយ</span>
+            <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center space-x-4 px-5 py-3.5 rounded-2xl transition-all duration-300 hover:bg-slate-800 hover:text-white font-medium">
+                <i class="fa-solid fa-gear text-xl w-6"></i><span>ការកំណត់</span>
             </button>
         </nav>
     </aside>
@@ -384,32 +373,86 @@ window.onunhandledrejection = function(event) {
             </div>
         </div>
 
-        <!-- VIEW 3: Budgets -->
-        <div id="view-budgets" class="view-panel p-3 md:p-10 space-y-2 md:space-y-3 md:space-y-6 flex-1 hidden animate-fade-in">
-            <div class="flex items-center justify-between glass-panel p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm">
-                <div>
-                    <h3 class="font-bold text-slate-900 dark:text-white text-lg">កញ្ចប់ថវិកាចំណាយ</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">គ្រប់គ្រងការចំណាយកុំឱ្យហួសពីផែនការ</p>
-                </div>
-                <button onclick="openBudgetModal()" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl text-sm font-bold flex items-center space-x-2 shadow-lg transition-all hover:scale-105">
-                    <i class="fa-solid fa-circle-plus"></i><span>កំណត់ថវិកាថ្មី</span>
-                </button>
+        
+        <!-- VIEW: REPORTS -->
+        <div id="view-reports" class="view-panel hidden p-3 md:p-10 space-y-6 flex-1 animate-fade-in">
+            <div class="mb-8 flex justify-between items-center">
+                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-300">របាយការណ៍</h1>
             </div>
-            <div id="budgets-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6"></div>
+            <div class="glass-panel p-8 rounded-3xl text-center">
+                <i class="fas fa-chart-line text-6xl text-slate-300 dark:text-slate-600 mb-4"></i>
+                <h2 class="text-xl font-medium text-slate-600 dark:text-slate-400">ទំព័រនេះនឹងមានឆាប់ៗនេះ</h2>
+            </div>
         </div>
 
-        <!-- VIEW 4: Categories -->
-        <div id="view-categories" class="view-panel p-3 md:p-10 space-y-2 md:space-y-3 md:space-y-6 flex-1 hidden animate-fade-in">
-            <div class="flex items-center justify-between glass-panel p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm">
-                <div>
-                    <h3 class="font-bold text-slate-900 dark:text-white text-lg">ប្រភេទចំណូលចំណាយ</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">រៀបចំប្រភេទចំណាត់ថ្នាក់តាមតម្រូវការ</p>
-                </div>
-                <button onclick="openCategoryModal()" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl text-sm font-bold flex items-center space-x-2 shadow-lg transition-all hover:scale-105">
-                    <i class="fa-solid fa-tags"></i><span>បង្កើតប្រភេទថ្មី</span>
-                </button>
+        <!-- VIEW: SETTINGS -->
+        <div id="view-settings" class="view-panel hidden p-3 md:p-10 space-y-6 flex-1 animate-fade-in">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-300">ការកំណត់</h1>
             </div>
-            <div id="categories-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5"></div>
+
+            <div class="flex space-x-4 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+                <button onclick="switchSettingsTab('settings-budgets')" id="tab-settings-budgets" class="settings-tab-btn active px-6 py-2.5 rounded-full font-medium transition-all duration-300 whitespace-nowrap bg-emerald-500 text-white shadow-lg shadow-emerald-500/30">កញ្ចប់ថវិកា</button>
+                <button onclick="switchSettingsTab('settings-categories')" id="tab-settings-categories" class="settings-tab-btn px-6 py-2.5 rounded-full font-medium transition-all duration-300 whitespace-nowrap bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-700">ប្រភេទ (Tag)</button>
+                <button onclick="switchSettingsTab('settings-income')" id="tab-settings-income" class="settings-tab-btn px-6 py-2.5 rounded-full font-medium transition-all duration-300 whitespace-nowrap bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-700">គណនាប្រាក់ចំណូល</button>
+            </div>
+
+            <!-- Settings: Budgets -->
+            <div id="settings-budgets" class="settings-panel">
+                <div class="mb-6 flex justify-between items-center">
+                    <h2 class="text-xl font-bold">កញ្ចប់ថវិកា</h2>
+                    <button onclick="openBudgetModal()" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl text-sm font-bold flex items-center space-x-2 shadow-lg transition-all hover:scale-105">
+                        <i class="fa-solid fa-plus"></i><span>បង្កើតកញ្ចប់ថវិកា</span>
+                    </button>
+                </div>
+                <div id="budgets-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- Settings: Categories -->
+            <div id="settings-categories" class="settings-panel hidden">
+                <div class="mb-6 flex justify-between items-center">
+                    <h2 class="text-xl font-bold">ប្រភេទ (Tag)</h2>
+                    <button onclick="openCategoryModal()" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl text-sm font-bold flex items-center space-x-2 shadow-lg transition-all hover:scale-105">
+                        <i class="fa-solid fa-tags"></i><span>បង្កើតប្រភេទថ្មី</span>
+                    </button>
+                </div>
+                <div id="categories-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5"></div>
+            </div>
+
+            <!-- Settings: Income Calc -->
+            <div id="settings-income" class="settings-panel hidden">
+                <div class="glass-panel p-6 rounded-3xl">
+                    <h2 class="text-xl font-bold mb-6">គណនាប្រាក់ចំណូលរំពឹងទុក</h2>
+                    <div class="space-y-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">ប្រាក់ខែគោល (USD)</label>
+                            <input type="number" id="calc-base-salary" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-500" placeholder="ឧ. 500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">ប្រាក់ថែមម៉ោង (OT) ក្នុង១ខែ (USD)</label>
+                            <input type="number" id="calc-ot" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-500" placeholder="ឧ. 50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">ប្រាក់លើកទឹកចិត្តផ្សេងៗ (USD)</label>
+                            <input type="number" id="calc-bonus" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-500" placeholder="ឧ. 100">
+                        </div>
+                        <button onclick="calculateIncome()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-xl transition-colors">
+                            គណនា
+                        </button>
+                    </div>
+                    
+                    <div class="p-4 bg-slate-100 dark:bg-slate-800 rounded-2xl mt-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-slate-500 dark:text-slate-400">ចំណូលសរុបប្រចាំខែ:</span>
+                            <span class="text-xl font-bold text-emerald-500" id="calc-res-monthly">$0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 dark:text-slate-400">ចំណូលសរុបប្រចាំឆ្នាំ:</span>
+                            <span class="text-lg font-bold text-teal-500" id="calc-res-yearly">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- VIEW 5: INFO / ABOUT -->
@@ -466,8 +509,8 @@ window.onunhandledrejection = function(event) {
             </button>
         </div>
 
-        <button onclick="switchTab('budgets')" id="mob-nav-budgets" class="flex flex-col items-center justify-center w-16 h-12 space-y-1 text-slate-400 dark:text-slate-500 transition-transform hover:scale-110"><i class="fa-solid fa-bullseye text-[22px]"></i><span class="text-[10px] font-medium mt-1">ថវិកា</span></button>
-        <button onclick="switchTab('categories')" id="mob-nav-categories" class="flex flex-col items-center justify-center w-16 h-12 space-y-1 text-slate-400 dark:text-slate-500 transition-transform hover:scale-110"><i class="fa-solid fa-tags text-[22px]"></i><span class="text-[10px] font-medium mt-1">ប្រភេទ</span></button>
+                <button onclick="switchTab('reports')" id="mob-nav-reports" class="flex flex-col items-center justify-center w-16 h-12 space-y-1 text-slate-400 dark:text-slate-500 transition-transform hover:scale-110"><i class="fa-solid fa-chart-line text-[22px]"></i><span class="text-[10px] font-medium mt-1">របាយការណ៍</span></button>
+        <button onclick="switchTab('settings')" id="mob-nav-settings" class="flex flex-col items-center justify-center w-16 h-12 space-y-1 text-slate-400 dark:text-slate-500 transition-transform hover:scale-110"><i class="fa-solid fa-gear text-[22px]"></i><span class="text-[10px] font-medium mt-1">ការកំណត់</span></button>
     </nav>
 
     <!-- MODAL: Transaction -->
@@ -732,7 +775,10 @@ window.onunhandledrejection = function(event) {
         let radarChartInstance = null;
 
         function initApp(serverData) {
-            document.getElementById('loading-overlay').style.display = 'none';
+            
+            if (!serverData) {
+                state.categories = DEFAULT_CATEGORIES;
+            }
             if (serverData) {
                 state.transactions = serverData.transactions || [];
                 state.categories = serverData.categories && serverData.categories.length ? serverData.categories : DEFAULT_CATEGORIES;
@@ -748,7 +794,7 @@ window.onunhandledrejection = function(event) {
         }
 
                 async function syncToCloud(action, tableName, id, recordObj) {
-            document.getElementById('loading-overlay').style.display = 'flex';
+            
             try {
                 const table = tableName.toLowerCase();
                 let res;
@@ -770,7 +816,7 @@ window.onunhandledrejection = function(event) {
                 console.error(err);
                 showNotification('បរាជ័យក្នុងការរក្សាទុក!', false);
             } finally {
-                document.getElementById('loading-overlay').style.display = 'none';
+                
             }
         }
 
@@ -808,6 +854,33 @@ window.onunhandledrejection = function(event) {
                 toast.classList.remove('translate-y-0');
                 toast.classList.add('translate-y-[-150%]');
             }, 3000);
+        }
+
+        
+        function switchSettingsTab(tabId) {
+            document.querySelectorAll('.settings-panel').forEach(p => p.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+            
+            document.querySelectorAll('.settings-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-500', 'text-white', 'shadow-lg', 'shadow-emerald-500/30', 'active');
+                btn.classList.add('bg-slate-200', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-400');
+            });
+            
+            const activeBtn = document.getElementById('tab-' + tabId);
+            activeBtn.classList.remove('bg-slate-200', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-400');
+            activeBtn.classList.add('bg-emerald-500', 'text-white', 'shadow-lg', 'shadow-emerald-500/30', 'active');
+        }
+
+        function calculateIncome() {
+            const base = parseFloat(document.getElementById('calc-base-salary').value) || 0;
+            const ot = parseFloat(document.getElementById('calc-ot').value) || 0;
+            const bonus = parseFloat(document.getElementById('calc-bonus').value) || 0;
+            
+            const monthly = base + ot + bonus;
+            const yearly = monthly * 12;
+            
+            document.getElementById('calc-res-monthly').innerText = '$' + monthly.toFixed(2);
+            document.getElementById('calc-res-yearly').innerText = '$' + yearly.toFixed(2);
         }
 
         function switchTab(tabName) {
@@ -1762,41 +1835,38 @@ window.onunhandledrejection = function(event) {
             }
         }
 
-        window.onload = async function() {
-            try {
-                const [txRes, catRes, bgRes] = await Promise.all([
-                    supabaseClient.from('transactions').select('*'),
-                    supabaseClient.from('categories').select('*'),
-                    supabaseClient.from('budgets').select('*')
-                ]);
-                
+        window.onload = function() {
+            initApp(null);
+            switchTab('dashboard');
+            
+            Promise.all([
+                supabaseClient.from('transactions').select('*'),
+                supabaseClient.from('categories').select('*'),
+                supabaseClient.from('budgets').select('*')
+            ]).then(([txRes, catRes, bgRes]) => {
                 const serverData = {
                     transactions: txRes.data ? txRes.data.map(t => ({
-                        id: t.id,
-                        amount: t.amount,
-                        currency: t.currency,
-                        date: t.date,
-                        categoryId: t.category_id,
-                        description: t.description,
-                        type: t.type
+                        id: t.id, amount: t.amount, currency: t.currency, date: t.date,
+                        categoryId: t.category_id, description: t.description, type: t.type
                     })) : [],
                     categories: catRes.data || [],
                     budgets: bgRes.data ? bgRes.data.map(b => ({
-                        id: b.id,
-                        name: b.name,
-                        categoryId: b.category_id,
-                        limitAmount: b.limit_amount,
-                        currency: b.currency,
-                        startDate: b.start_date,
-                        endDate: b.end_date,
-                        description: b.description
+                        id: b.id, name: b.name, categoryId: b.category_id,
+                        limitAmount: b.limit_amount, currency: b.currency,
+                        startDate: b.start_date, endDate: b.end_date, description: b.description
                     })) : []
                 };
-                initApp(serverData);
-            } catch (err) {
-                console.error(err);
-                initApp(null);
-            }
+                
+                state.transactions = serverData.transactions;
+                if(serverData.categories.length) state.categories = serverData.categories;
+                state.budgets = serverData.budgets;
+                
+                renderCategoryColors();
+                populateFilterCategories();
+                renderAll();
+            }).catch(err => {
+                console.error("Background fetch error:", err);
+            });
         };
     </script>
 </body>
