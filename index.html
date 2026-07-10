@@ -26,7 +26,62 @@ window.onunhandledrejection = function(event) {
     errDiv.innerHTML = "Promise Rejection: " + (event.reason ? event.reason.message : "Unknown");
     document.body.appendChild(errDiv);
 };
-</script>
+
+        function renderBudgetCategoryCheckboxes() {
+            const list = document.getElementById('budget-category-list');
+            if(!list) return;
+            list.innerHTML = '';
+            state.categories.forEach(c => {
+                const typeLabel = c.type === 'income' ? '(ចំណូល)' : '(ចំណាយ)';
+                const color = c.type === 'income' ? 'text-emerald-500' : 'text-rose-500';
+                list.innerHTML += `
+                  <label class="flex items-center px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer border-b border-slate-100 dark:border-slate-700 last:border-0 transition-colors">
+                      <input type="checkbox" value="${c.id}" class="budget-cat-checkbox form-checkbox h-5 w-5 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500 mr-3">
+                      <span class="text-sm font-medium dark:text-white"><i class="fa-solid ${c.icon} w-5 text-center mr-2"></i>${c.name} <span class="text-xs ${color}">${typeLabel}</span></span>
+                  </label>
+                `;
+            });
+        }
+        function updateBudgetCategoryText() {
+            const checkboxes = document.querySelectorAll('.budget-cat-checkbox:checked');
+            const textSpan = document.getElementById('budget-category-text');
+            if(!textSpan) return;
+            if (checkboxes.length === 0) {
+                textSpan.textContent = 'សូមជ្រើសរើសប្រភេទ...';
+                textSpan.classList.add('text-slate-400');
+            } else {
+                let names = [];
+                checkboxes.forEach(cb => {
+                    const cat = state.categories.find(c => c.id === cb.value);
+                    if(cat) names.push(cat.name);
+                });
+                textSpan.textContent = names.join(', ');
+                textSpan.classList.remove('text-slate-400');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('budget-category-dropdown');
+            const list = document.getElementById('budget-category-list');
+            if(btn && list) {
+                btn.addEventListener('click', function(e) {
+                    list.classList.toggle('hidden');
+                    e.stopPropagation();
+                });
+                list.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if(e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') {
+                        setTimeout(updateBudgetCategoryText, 10);
+                    }
+                });
+                document.addEventListener('click', function() {
+                    if(!list.classList.contains('hidden')) {
+                        list.classList.add('hidden');
+                    }
+                });
+            }
+        });
+
+    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -190,7 +245,29 @@ window.onunhandledrejection = function(event) {
                         <option value="month" selected>ខែនេះ (This Month)</option>
                         <option value="year">ឆ្នាំនេះ (This Year)</option>
                         <option value="custom">កំណត់ថ្ងៃ (Custom Range)</option>
-                    </select>
+                    
+                            <option value="fa-shirt">សម្លៀកបំពាក់</option>
+                            <option value="fa-dumbbell">កីឡា</option>
+                            <option value="fa-music">ការកម្សាន្ត</option>
+                            <option value="fa-book">សៀវភៅ</option>
+                            <option value="fa-coins">ប្រាក់ចំណូល</option>
+                            <option value="fa-wallet">កាបូប</option>
+                            <option value="fa-piggy-bank">សន្សំប្រាក់</option>
+                            <option value="fa-gift">អំណោយ</option>
+                            <option value="fa-bus">ឡានក្រុង</option>
+                            <option value="fa-plane-departure">ការធ្វើដំណើរ</option>
+                            <option value="fa-gas-pump">ប្រេងសាំង</option>
+                            <option value="fa-toolbox">ការជួសជុល</option>
+                            <option value="fa-stethoscope">សុខភាព</option>
+                            <option value="fa-pills">ថ្នាំពេទ្យ</option>
+                            <option value="fa-laptop">គ្រឿងអេឡិចត្រូនិក</option>
+                            <option value="fa-camera">កាមេរ៉ា</option>
+                            <option value="fa-basket-shopping">ផ្សារ</option>
+                            <option value="fa-fire">អគ្គិសនី</option>
+                            <option value="fa-droplet">ទឹក</option>
+                            <option value="fa-wifi">អ៊ីនធឺណិត</option>
+
+                        </select>
                     
                     <div id="dash-custom-date-range" class="hidden flex items-center space-x-2 animate-slide-up">
                         <input type="date" id="dash-start-date" onchange="renderDashboard()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm dark:text-white outline-none">
@@ -613,7 +690,28 @@ window.onunhandledrejection = function(event) {
                             <option value="fa-baby">កូនក្មេង</option>
                             <option value="fa-paw">សត្វចិញ្ចឹម</option>
                             <option value="fa-tags">ផ្សេងៗ</option>
-                        </select>
+                        
+                            <option value="fa-shirt">សម្លៀកបំពាក់</option>
+                            <option value="fa-dumbbell">កីឡា</option>
+                            <option value="fa-music">ការកម្សាន្ត</option>
+                            <option value="fa-book">សៀវភៅ</option>
+                            <option value="fa-coins">ប្រាក់ចំណូល</option>
+                            <option value="fa-wallet">កាបូប</option>
+                            <option value="fa-piggy-bank">សន្សំប្រាក់</option>
+                            <option value="fa-gift">អំណោយ</option>
+                            <option value="fa-bus">ឡានក្រុង</option>
+                            <option value="fa-plane-departure">ការធ្វើដំណើរ</option>
+                            <option value="fa-gas-pump">ប្រេងសាំង</option>
+                            <option value="fa-toolbox">ការជួសជុល</option>
+                            <option value="fa-stethoscope">សុខភាព</option>
+                            <option value="fa-pills">ថ្នាំពេទ្យ</option>
+                            <option value="fa-laptop">គ្រឿងអេឡិចត្រូនិក</option>
+                            <option value="fa-camera">កាមេរ៉ា</option>
+                            <option value="fa-basket-shopping">ផ្សារ</option>
+                            <option value="fa-fire">អគ្គិសនី</option>
+                            <option value="fa-droplet">ទឹក</option>
+                            <option value="fa-wifi">អ៊ីនធឺណិត</option>
+</select>
                     </div>
                 </div>
                 <div>
@@ -647,8 +745,12 @@ window.onunhandledrejection = function(event) {
                 <div>
                     <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">សម្រាប់ប្រភេទចំណាយ (រើសបានច្រើន)</label>
                     <div class="relative">
-                        <select id="budget-form-category" multiple required class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all h-24" title="ចុច Ctrl ជាប់ដើម្បីរើសច្រើន"></select>
-                        <span class="absolute top-2 right-2 bg-blue-100 text-blue-600 text-[8px] px-1 rounded hidden md:block">Ctrl សម្រាប់រើសច្រើន</span>
+                        <div id="budget-category-dropdown" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm dark:text-white cursor-pointer flex justify-between items-center transition-all">
+                            <span id="budget-category-text" class="truncate">សូមជ្រើសរើសប្រភេទ...</span>
+                            <i class="fa-solid fa-chevron-down text-slate-400"></i>
+                        </div>
+                        <div id="budget-category-list" class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl hidden max-h-56 overflow-y-auto">
+                        </div>
                     </div>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
@@ -753,7 +855,14 @@ window.onunhandledrejection = function(event) {
             pink: { bg: 'bg-pink-500', text: 'text-pink-500', lightBg: 'bg-pink-100 dark:bg-pink-900/30', hex: '#ec4899' },
             lime: { bg: 'bg-lime-500', text: 'text-lime-500', lightBg: 'bg-lime-100 dark:bg-lime-900/30', hex: '#84cc16' },
             indigo: { bg: 'bg-indigo-500', text: 'text-indigo-500', lightBg: 'bg-indigo-100 dark:bg-indigo-900/30', hex: '#6366f1' },
-            slate: { bg: 'bg-slate-500', text: 'text-slate-500', lightBg: 'bg-slate-200 dark:bg-slate-800', hex: '#64748b' }
+            slate: { bg: 'bg-slate-500', text: 'text-slate-500', lightBg: 'bg-slate-200 dark:bg-slate-800', hex: '#64748b' },
+            yellow: { bg: 'bg-yellow-500', text: 'text-yellow-500', lightBg: 'bg-yellow-100 dark:bg-yellow-900/30', hex: '#eab308' },
+            fuchsia: { bg: 'bg-fuchsia-500', text: 'text-fuchsia-500', lightBg: 'bg-fuchsia-100 dark:bg-fuchsia-900/30', hex: '#d946ef' },
+            violet: { bg: 'bg-violet-500', text: 'text-violet-500', lightBg: 'bg-violet-100 dark:bg-violet-900/30', hex: '#8b5cf6' },
+            sky: { bg: 'bg-sky-500', text: 'text-sky-500', lightBg: 'bg-sky-100 dark:bg-sky-900/30', hex: '#0ea5e9' },
+            red: { bg: 'bg-red-500', text: 'text-red-500', lightBg: 'bg-red-100 dark:bg-red-900/30', hex: '#ef4444' },
+            green: { bg: 'bg-green-500', text: 'text-green-500', lightBg: 'bg-green-100 dark:bg-green-900/30', hex: '#22c55e' },
+
         };
 
         const DISTINCT_COLORS = [
