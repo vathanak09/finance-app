@@ -228,7 +228,7 @@ window.onunhandledrejection = function(event) {
         </header>
 
         <!-- VIEW 1: Dashboard -->
-        <div id="view-dashboard" class="view-panel p-3 md:p-10 space-y-2 md:space-y-3 md:space-y-6 flex-1 animate-fade-in">
+        <div id="view-dashboard" class="view-panel p-3 md:p-6 space-y-2 md:space-y-3 md:space-y-6 flex-1 animate-fade-in">
             
             <!-- Top Filter Bar -->
             <div class="glass-panel p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4" data-html2canvas-ignore>
@@ -356,7 +356,7 @@ window.onunhandledrejection = function(event) {
         </div>
 
         <!-- VIEW 2: Transactions -->
-        <div id="view-transactions" class="view-panel p-3 md:p-10 space-y-2 md:space-y-3 md:space-y-6 flex-1 hidden animate-fade-in">
+        <div id="view-transactions" class="view-panel p-3 md:p-6 space-y-2 md:space-y-3 md:space-y-6 flex-1 hidden animate-fade-in">
             
             <div class="glass-panel p-3 md:p-5 rounded-2xl md:rounded-3xl shadow-sm flex flex-col space-y-2 md:space-y-3 md:space-y-0 md:flex-row md:items-center md:justify-between md:space-x-4">
                 <div class="flex flex-wrap items-center gap-3 flex-1">
@@ -452,7 +452,7 @@ window.onunhandledrejection = function(event) {
 
         
         <!-- VIEW: REPORTS -->
-        <div id="view-reports" class="view-panel hidden p-3 md:p-10 space-y-6 flex-1 animate-fade-in">
+        <div id="view-reports" class="view-panel hidden p-3 md:p-6 space-y-6 flex-1 animate-fade-in">
             <div class="mb-8 flex justify-between items-center">
                 <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-300">របាយការណ៍</h1>
             </div>
@@ -463,7 +463,7 @@ window.onunhandledrejection = function(event) {
         </div>
 
         <!-- VIEW: SETTINGS -->
-        <div id="view-settings" class="view-panel hidden p-3 md:p-10 space-y-6 flex-1 animate-fade-in">
+        <div id="view-settings" class="view-panel hidden p-3 md:p-6 space-y-6 flex-1 animate-fade-in">
             <div class="mb-8">
                 <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-300">ការកំណត់</h1>
             </div>
@@ -482,7 +482,12 @@ window.onunhandledrejection = function(event) {
                         <i class="fa-solid fa-plus"></i><span>បង្កើតកញ្ចប់ថវិកា</span>
                     </button>
                 </div>
-                <div id="budgets-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <div id="budgets-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+                
+                <div id="expired-budgets-header" class="mb-4 hidden">
+                    <h3 class="text-lg font-bold text-slate-500 dark:text-slate-400 flex items-center"><i class="fa-solid fa-clock-rotate-left mr-2"></i>កញ្ចប់ថវិកាដែលផុតកំណត់ (Expired)</h3>
+                </div>
+                <div id="expired-budgets-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-75"></div>
             </div>
 
             <!-- Settings: Categories -->
@@ -533,7 +538,7 @@ window.onunhandledrejection = function(event) {
         </div>
 
         <!-- VIEW 5: INFO / ABOUT -->
-        <div id="view-info" class="view-panel p-3 md:p-10 space-y-2 md:space-y-3 md:space-y-6 flex-1 hidden animate-fade-in">
+        <div id="view-info" class="view-panel p-3 md:p-6 space-y-2 md:space-y-3 md:space-y-6 flex-1 hidden animate-fade-in">
             <div class="glass-panel p-8 rounded-3xl shadow-sm text-center max-w-2xl mx-auto mt-10">
                 <div class="h-20 w-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/30">
                     <i class="fa-solid fa-code text-white text-3xl"></i>
@@ -1529,7 +1534,7 @@ window.onunhandledrejection = function(event) {
                 bEnd.setHours(23,59,59,999);
 
                 state.transactions.forEach(tx => {
-                    if (budgetCatIds.includes(tx.categoryId) && tx.type === 'expense') {
+                    if (budgetCatIds.includes(tx.categoryId)) {
                         const txDate = new Date(tx.date);
                         if(txDate >= bStart && txDate <= bEnd) {
                             let amt = parseFloat(tx.amount);
