@@ -1806,9 +1806,8 @@ window.onunhandledrejection = function(event) {
             document.getElementById('budget-form-start').value = firstDay.toISOString().split('T')[0];
             document.getElementById('budget-form-end').value = lastDay.toISOString().split('T')[0];
 
-            const select = document.getElementById('budget-form-category');
-            select.innerHTML = '';
-            state.categories.filter(c => c.type === 'expense').forEach(c => select.innerHTML += `<option value="${c.id}">${c.name}</option>`);
+            renderBudgetCategoryCheckboxes();
+            updateBudgetCategoryText();
             
             document.getElementById('budget-modal-title').textContent = 'កំណត់ថវិកាថ្មី';
             openModal('budget-modal');
@@ -1819,8 +1818,13 @@ window.onunhandledrejection = function(event) {
             e.preventDefault();
             const id = document.getElementById('budget-id').value;
             
-            const selectedOptions = Array.from(document.getElementById('budget-form-category').selectedOptions).map(opt => opt.value);
+            const checkboxes = document.querySelectorAll('.budget-cat-checkbox:checked');
+            const selectedOptions = Array.from(checkboxes).map(cb => cb.value);
             const categoryIdStr = selectedOptions.join(',');
+            if(selectedOptions.length === 0) {
+                alert("សូមជ្រើសរើសប្រភេទយ៉ាងហោចណាស់មួយ! (Please select at least one category)");
+                return;
+            }
 
             const bg = {
                 id: id || generateUUID(),
@@ -1852,14 +1856,12 @@ window.onunhandledrejection = function(event) {
             const bg = state.budgets.find(b => b.id === id);
             if(!bg) return;
             
-            const select = document.getElementById('budget-form-category');
-            select.innerHTML = '';
-            state.categories.filter(c => c.type === 'expense').forEach(c => select.innerHTML += `<option value="${c.id}">${c.name}</option>`);
-
+            renderBudgetCategoryCheckboxes();
             const budgetCatIds = bg.categoryId.split(',');
-            Array.from(select.options).forEach(opt => {
-                if(budgetCatIds.includes(opt.value)) opt.selected = true;
+            document.querySelectorAll('.budget-cat-checkbox').forEach(cb => {
+                if(budgetCatIds.includes(cb.value)) cb.checked = true;
             });
+            updateBudgetCategoryText();
 
             document.getElementById('budget-id').value = bg.id;
             document.getElementById('budget-form-name').value = bg.name || '';
