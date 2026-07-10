@@ -1565,8 +1565,16 @@ window.onunhandledrejection = function(event) {
                     }
                 }
 
+                const now = new Date();
+                const isExpired = bEnd < now;
+                const expiredBadgeHtml = isExpired 
+                    ? '<div class="absolute top-0 right-0 bg-rose-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-2xl md:rounded-tr-3xl rounded-tr-2xl shadow-sm z-10">ផុតកំណត់</div>'
+                    : '';
+                const opacityClass = isExpired ? 'opacity-60 grayscale-[50%]' : '';
+
                 container.innerHTML += `
-                    <div class="glass-panel p-4 md:p-4 rounded-2xl md:rounded-3xl shadow-sm relative transform transition-all hover:-translate-y-1">
+                    <div class="glass-panel p-4 md:p-4 rounded-2xl md:rounded-3xl shadow-sm relative transform transition-all hover:-translate-y-1 ${opacityClass}">
+                        ${expiredBadgeHtml}
                         <div class="absolute top-4 right-4 flex space-x-1">
                             <button onclick="editBudget('${b.id}')" class="text-slate-400 hover:text-emerald-500 transition-colors p-1"><i class="fa-solid fa-pen text-sm"></i></button>
                             <button onclick="deleteBudget('${b.id}')" class="text-slate-400 hover:text-rose-500 transition-colors p-1"><i class="fa-solid fa-trash text-sm"></i></button>
