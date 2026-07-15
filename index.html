@@ -512,7 +512,7 @@ window.onunhandledrejection = function(event) {
                     <div class="mb-6">
                         <h3 class="text-sm font-bold text-slate-500 mb-3 uppercase flex justify-between">
                             <span>បញ្ជីចំណូល (Check)</span>
-                            <span id="recon-total-checked" class="text-emerald-500">$0.00</span>
+                            <span id="recon-total-checked" class="text-emerald-500">0 ៛</span>
                         </h3>
                         <div id="recon-incomes-list" class="space-y-2 max-h-60 overflow-y-auto pr-2">
                             <!-- JS injected checkboxes go here -->
@@ -542,11 +542,11 @@ window.onunhandledrejection = function(event) {
                     <div class="p-4 bg-slate-100 dark:bg-slate-800 rounded-2xl mt-6">
                         <div class="flex justify-between items-center mb-3">
                             <span class="text-slate-500 dark:text-slate-400 font-bold text-sm">លុយលក់ដូរ:</span>
-                            <span class="text-lg font-black text-slate-800 dark:text-white" id="recon-res-sales">$0.00</span>
+                            <span class="text-lg font-black text-slate-800 dark:text-white" id="recon-res-sales">0 ៛</span>
                         </div>
                         <div class="flex justify-between items-center border-t border-slate-200 dark:border-slate-700 pt-3">
                             <span class="text-slate-500 dark:text-slate-400 font-bold text-sm">លុយបង់សរុប:</span>
-                            <span class="text-base font-bold text-rose-500" id="recon-res-paid">$0.00</span>
+                            <span class="text-base font-bold text-rose-500" id="recon-res-paid">0 ៛</span>
                         </div>
                     </div>
                 </div>
@@ -1024,7 +1024,7 @@ window.onunhandledrejection = function(event) {
             
             if (incomes.length === 0) {
                 container.innerHTML = '<p class="text-xs text-center text-slate-400 py-4">មិនមានទិន្នន័យចំណូលសម្រាប់ថ្ងៃនេះទេ</p>';
-                document.getElementById('recon-total-checked').innerText = '$0.00';
+                document.getElementById('recon-total-checked').innerText = '0 ៛';
                 return;
             }
             
@@ -1051,21 +1051,21 @@ window.onunhandledrejection = function(event) {
 
         function updateReconTotal() {
             const checkboxes = document.querySelectorAll('.recon-checkbox:checked');
-            let totalUSD = 0;
+            let totalKHR = 0;
             checkboxes.forEach(cb => {
                 const amt = parseFloat(cb.value);
-                if (cb.dataset.currency === 'KHR') {
-                    totalUSD += (amt / EXCHANGE_RATE);
+                if (cb.dataset.currency === 'USD') {
+                    totalKHR += (amt * EXCHANGE_RATE);
                 } else {
-                    totalUSD += amt;
+                    totalKHR += amt;
                 }
             });
-            document.getElementById('recon-total-checked').innerText = '$' + totalUSD.toFixed(2);
-            return totalUSD;
+            document.getElementById('recon-total-checked').innerText = totalKHR.toLocaleString('en-US') + ' ៛';
+            return totalKHR;
         }
 
         function calculateReconciliation() {
-            const totalIncomeUSD = updateReconTotal();
+            const totalIncomeKHR = updateReconTotal();
             
             const paidCash = parseFloat(document.getElementById('recon-paid-cash').value) || 0;
             const paidQr = parseFloat(document.getElementById('recon-paid-qr').value) || 0;
@@ -1073,12 +1073,12 @@ window.onunhandledrejection = function(event) {
             
             const totalPaid = paidCash + paidQr;
             // Sales Money = Actual - Checked Income - Total Paid
-            const salesDiff = actualCash - totalIncomeUSD - totalPaid;
+            const salesDiff = actualCash - totalIncomeKHR - totalPaid;
             
-            document.getElementById('recon-res-sales').innerText = '$' + salesDiff.toFixed(2);
+            document.getElementById('recon-res-sales').innerText = salesDiff.toLocaleString('en-US') + ' ៛';
             document.getElementById('recon-res-sales').className = salesDiff >= 0 ? "text-lg font-black text-emerald-500" : "text-lg font-black text-rose-500";
             
-            document.getElementById('recon-res-paid').innerText = '$' + totalPaid.toFixed(2);
+            document.getElementById('recon-res-paid').innerText = totalPaid.toLocaleString('en-US') + ' ៛';
         }
 
         function switchTab(tabName) {
