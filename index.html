@@ -2081,5 +2081,17 @@ window.onunhandledrejection = function(event) {
             });
         };
     </script>
-</body>
+    <!-- Overlays -->
+    <div id="loading-overlay" class="hidden">
+        <div class="spinner mb-4"></div>
+        <h2 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-300">កំពុងដំណើរការទិន្នន័យ...</h2>
+        <p class="text-sm text-slate-400 mt-2">សូមរង់ចាំបន្តិច</p>
+    </div>
+
+    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-150%] transition-transform duration-500 glass-panel px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 max-w-sm pointer-events-none">
+        <div id="toast-icon-box" class="p-2 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl text-white shadow-lg">
+            <i id="toast-icon" class="fas fa-check-circle text-lg"></i>
+        </div>
+        <div><p id="toast-message" class="font-semibold text-sm dark:text-white">ជោគជ័យ!</p></div>
+    </div>\n</body>
 </html>
