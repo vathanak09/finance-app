@@ -1075,9 +1075,8 @@ window.onunhandledrejection = function(event) {
             const paidQr = parseFloat(document.getElementById('recon-paid-qr').value) || 0;
             const actualCash = parseFloat(document.getElementById('recon-actual-cash').value) || 0;
             
-            const totalPaid = paidCash + paidQr;
-            // Sales Money = Actual - Checked Income - Total Paid
-            const salesDiff = actualCash - totalIncomeKHR - totalPaid;
+            // Sales Money = Actual - Cash Paid - Checked Income (QR is just displayed)
+            const salesDiff = actualCash - paidCash - totalIncomeKHR;
             
             document.getElementById('recon-res-sales').innerText = salesDiff.toLocaleString('en-US') + ' ៛';
             document.getElementById('recon-res-sales').className = salesDiff >= 0 ? "text-lg font-black text-emerald-500" : "text-lg font-black text-rose-500";
