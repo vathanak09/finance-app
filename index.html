@@ -544,9 +544,13 @@ window.onunhandledrejection = function(event) {
                             <span class="text-slate-500 dark:text-slate-400 font-bold text-sm">លុយលក់ដូរ:</span>
                             <span class="text-lg font-black text-slate-800 dark:text-white" id="recon-res-sales">0 ៛</span>
                         </div>
-                        <div class="flex justify-between items-center border-t border-slate-200 dark:border-slate-700 pt-3">
-                            <span class="text-slate-500 dark:text-slate-400 font-bold text-sm">លុយបង់សរុប:</span>
-                            <span class="text-base font-bold text-rose-500" id="recon-res-paid">0 ៛</span>
+                        <div class="flex justify-between items-center border-t border-slate-200 dark:border-slate-700 pt-3 mb-2">
+                            <span class="text-slate-500 dark:text-slate-400 font-bold text-sm">លុយបង់ផ្ទាល់:</span>
+                            <span class="text-base font-bold text-rose-500" id="recon-res-paid-cash-res">0 ៛</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 dark:text-slate-400 font-bold text-sm">លុយបង់តាម QR:</span>
+                            <span class="text-base font-bold text-rose-500" id="recon-res-paid-qr-res">0 ៛</span>
                         </div>
                     </div>
                 </div>
@@ -1078,7 +1082,8 @@ window.onunhandledrejection = function(event) {
             document.getElementById('recon-res-sales').innerText = salesDiff.toLocaleString('en-US') + ' ៛';
             document.getElementById('recon-res-sales').className = salesDiff >= 0 ? "text-lg font-black text-emerald-500" : "text-lg font-black text-rose-500";
             
-            document.getElementById('recon-res-paid').innerText = totalPaid.toLocaleString('en-US') + ' ៛';
+            document.getElementById('recon-res-paid-cash-res').innerText = paidCash.toLocaleString('en-US') + ' ៛';
+            document.getElementById('recon-res-paid-qr-res').innerText = paidQr.toLocaleString('en-US') + ' ៛';
         }
 
         function switchTab(tabName) {
