@@ -97,7 +97,8 @@ window.onunhandledrejection = function(event) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script>
@@ -892,9 +893,20 @@ window.onunhandledrejection = function(event) {
         ];
 
         
-        const supabaseUrl = 'https://fbcoojxwtrwdblylqawz.supabase.co';
-        const supabaseKey = 'sb_publishable_ekSnjuBPDY0GHiMaBPIarg_NAJeXehA';
-        const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "finance-record-vathanak.firebaseapp.com",
+            projectId: "finance-record-vathanak",
+            storageBucket: "finance-record-vathanak.firebasestorage.app",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
 
         let barChartInstance = null;
         let doughnutChartInstance = null;
@@ -923,33 +935,22 @@ window.onunhandledrejection = function(event) {
         }
 
                 async function syncToCloud(action, tableName, id, recordObj) {
-            
-            try {
-                const table = tableName.toLowerCase();
-                let res;
-                if (action === 'add') {
-                    res = await supabaseClient.from(table).insert([recordObj]);
-                } else if (action === 'update') {
-                    res = await supabaseClient.from(table).update(recordObj).eq('id', id);
-                } else if (action === 'delete') {
-                    res = await supabaseClient.from(table).delete().eq('id', id);
-                }
-                
-                if (res && res.error) {
-                    showNotification('Error: ' + res.error.message, false);
-                    console.error("Supabase Error:", res.error);
-                } else {
-                    console.log("Supabase Success:", res);
-                }
-            } catch (err) {
-                console.error(err);
-                showNotification('បរាជ័យក្នុងការរក្សាទុក!', false);
-            } finally {
-                
-            }
-        }
+              try {
+                  const table = tableName.toLowerCase();
+                  const collectionRef = db.collection(table);
+                  if (action === 'add' || action === 'update') {
+                      await collectionRef.doc(id).set(recordObj, { merge: true });
+                  } else if (action === 'delete') {
+                      await collectionRef.doc(id).delete();
+                  }
+                  console.log("Firebase Success:", action, table, id);
+              } catch (err) {
+                  console.error("Firebase Error:", err);
+                  showNotification('មិនអាចសង្គ្រោះ ឬរក្សាទុកទិន្នន័យបានទេ!', false);
+              }
+          }
 
-        function formatMoney(amount, currency) {
+          function formatMoney(amount, currency) {
             if (currency === 'USD') return '$' + parseFloat(amount).toFixed(2);
             return parseFloat(amount).toLocaleString('en-US') + ' ៛';
         }
@@ -2043,39 +2044,64 @@ window.onunhandledrejection = function(event) {
         }
 
         window.onload = function() {
-            initApp(null);
-            switchTab('dashboard');
-            
-            Promise.all([
-                supabaseClient.from('transactions').select('*'),
-                supabaseClient.from('categories').select('*'),
-                supabaseClient.from('budgets').select('*')
-            ]).then(([txRes, catRes, bgRes]) => {
-                const serverData = {
-                    transactions: txRes.data ? txRes.data.map(t => ({
-                        id: t.id, amount: t.amount, currency: t.currency, date: t.date,
-                        categoryId: t.category_id, description: t.description, type: t.type
-                    })) : [],
-                    categories: catRes.data || [],
-                    budgets: bgRes.data ? bgRes.data.map(b => ({
-                        id: b.id, name: b.name, categoryId: b.category_id,
-                        limitAmount: b.limit_amount, currency: b.currency,
-                        startDate: b.start_date, endDate: b.end_date, description: b.description
-                    })) : []
-                };
-                
-                state.transactions = serverData.transactions;
-                if(serverData.categories.length) state.categories = serverData.categories;
-                state.budgets = serverData.budgets;
-                
-                renderCategoryColors();
-                populateFilterCategories();
-                renderAll();
-            }).catch(err => {
-                console.error("Background fetch error:", err);
-            });
-        };
-    </script>
+              initApp(null);
+              switchTab('dashboard');
+              
+              Promise.all([
+                  db.collection('transactions').get(),
+                  db.collection('categories').get(),
+                  db.collection('budgets').get()
+              ]).then(([txSnap, catSnap, bgSnap]) => {
+                  const serverData = {
+                      transactions: txSnap.docs.map(doc => {
+                          const t = doc.data();
+                          return {
+                              id: t.id || doc.id,
+                              amount: t.amount,
+                              currency: t.currency,
+                              date: t.date,
+                              categoryId: t.category_id || t.categoryId,
+                              description: t.description,
+                              type: t.type
+                          };
+                      }),
+                      categories: catSnap.docs.map(doc => {
+                          const c = doc.data();
+                          return {
+                              id: c.id || doc.id,
+                              name: c.name,
+                              type: c.type,
+                              icon: c.icon,
+                              color: c.color
+                          };
+                      }),
+                      budgets: bgSnap.docs.map(doc => {
+                          const b = doc.data();
+                          return {
+                              id: b.id || doc.id,
+                              name: b.name,
+                              categoryId: b.category_id || b.categoryId,
+                              limitAmount: b.limit_amount || b.limitAmount,
+                              currency: b.currency,
+                              startDate: b.start_date || b.startDate,
+                              endDate: b.end_date || b.endDate,
+                              description: b.description
+                          };
+                      })
+                  };
+                  
+                  if (serverData.transactions.length) state.transactions = serverData.transactions;
+                  if (serverData.categories.length) state.categories = serverData.categories;
+                  if (serverData.budgets.length) state.budgets = serverData.budgets;
+                  
+                  renderCategoryColors();
+                  populateFilterCategories();
+                  renderAll();
+              }).catch(err => {
+                  console.error("Background fetch error:", err);
+              });
+          };
+      </script>
     <!-- Overlays -->
 
     <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-150%] transition-transform duration-500 glass-panel px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 max-w-sm pointer-events-none">
