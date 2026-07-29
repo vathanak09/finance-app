@@ -2,7 +2,7 @@
   "name": "សៀវភៅហិរញ្ញវត្ថុ - កម្មវិធីគ្រប់គ្រងហិរញ្ញវត្ថុ",
   "short_name": "ហិរញ្ញវត្ថុ",
   "description": "កម្មវិធីគ្រប់គ្រងហិរញ្ញវត្ថុផ្ទាល់ខ្លួន (Personal Finance Manager)",
-  "start_url": "./index.html",
+  "start_url": "./index.html?v=3.0",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0f172a",
@@ -10,13 +10,13 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "icons/icon-192x192.png",
+      "src": "icons/icon-192x192.png?v=3.0",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-512x512.png",
+      "src": "icons/icon-512x512.png?v=3.0",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

@@ -92,10 +92,11 @@ window.onunhandledrejection = function(event) {
     <meta name="apple-mobile-web-app-title" content="សៀវភៅហិរញ្ញវត្ថុ">
     <meta name="application-name" content="សៀវភៅហិរញ្ញវត្ថុ">
 
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512x512.png">
+    <link rel="icon" type="image/png" href="favicon.png?v=3.0">
+    <link rel="manifest" href="manifest.json?v=3.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png?v=3.0">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png?v=3.0">
+    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512x512.png?v=3.0">
 
     <title>សៀវភៅហិរញ្ញវត្ថុ - កម្មវិធីគ្រប់គ្រងហិរញ្ញវត្ថុផ្ទាល់ខ្លួន</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -2137,7 +2138,7 @@ window.onunhandledrejection = function(event) {
     <!-- Floating PWA Install Banner -->
     <div id="pwa-install-banner" class="hidden fixed bottom-16 left-4 right-4 md:left-auto md:right-6 md:w-96 z-40 bg-slate-900/95 dark:bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl border border-emerald-500/30 animate-slide-up flex items-center justify-between space-x-3">
         <div class="flex items-center space-x-3">
-            <img src="icons/icon-192x192.png" class="w-10 h-10 rounded-xl shadow-sm border border-emerald-400/30" alt="App Icon">
+            <img src="icons/icon-192x192.png?v=3.0" class="w-10 h-10 rounded-xl shadow-sm border border-emerald-400/30" alt="App Icon">
             <div>
                 <h4 class="font-bold text-xs text-white">ដំឡើង "សៀវភៅហិរញ្ញវត្ថុ"</h4>
                 <p class="text-[10px] text-slate-300">បន្ថែមលើអេក្រង់ទូរស័ព្ទ (Android & iOS)</p>
@@ -2222,7 +2223,7 @@ window.onunhandledrejection = function(event) {
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                    .then((reg) => console.log('Service Worker Registered:', reg.scope))
+                    .then((reg) => console.log('Service Worker Registered:', reg.scope); reg.update();)
                     .catch((err) => console.log('Service Worker Error:', err));
             });
         }

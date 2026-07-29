@@ -1,14 +1,14 @@
-const CACHE_NAME = 'finance-app-v2';
+const CACHE_NAME = 'finance-app-v3';
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './manifest.json',
-  './icons/icon-192x192.png',
-  './icons/icon-512x512.png',
-  './icons/apple-touch-icon.png'
+  './manifest.json?v=3.0',
+  './icons/icon-192x192.png?v=3.0',
+  './icons/icon-512x512.png?v=3.0',
+  './icons/apple-touch-icon.png?v=3.0',
+  './favicon.png?v=3.0'
 ];
 
-// Install event - Pre-cache static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -18,7 +18,6 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activate event - Clean up old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -34,17 +33,12 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event - Stale-while-revalidate or Network-first with Cache fallback
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests
   if (event.request.method !== 'GET') return;
-  
-  // Skip cross-origin or dynamic API calls like Firestore API for live data
   const url = event.request.url;
   if (url.includes('firestore.googleapis.com') || url.includes('google.com')) {
     return;
   }
-
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
@@ -61,7 +55,7 @@ self.addEventListener('fetch', (event) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          if (event.request.headers.get('accept').includes('text/html')) {
+          if (event.request.headers && event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html')) {
             return caches.match('./index.html');
           }
         });
