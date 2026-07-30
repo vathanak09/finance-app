@@ -1,10 +1,10 @@
-const CACHE_NAME = 'finance-app-v5';
+const CACHE_NAME = 'finance-app-v9.0';
 const STATIC_ASSETS = [
-  './manifest.json?v=5.0',
-  './icons/icon-192x192.png?v=5.0',
-  './icons/icon-512x512.png?v=5.0',
-  './icons/apple-touch-icon.png?v=5.0',
-  './favicon.png?v=5.0'
+  './manifest.json?v=9.0',
+  './icons/icon-192x192.png?v=9.0',
+  './icons/icon-512x512.png?v=9.0',
+  './icons/apple-touch-icon.png?v=9.0',
+  './favicon.png?v=9.0'
 ];
 
 self.addEventListener('install', (event) => {
