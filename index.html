@@ -149,6 +149,37 @@ window.onunhandledrejection = function(event) {
         select[multiple] { height: auto; min-height: 80px; padding: 8px; }
         select[multiple] option { padding: 8px; border-radius: 6px; margin-bottom: 4px; cursor: pointer; }
         select[multiple] option:checked { background-color: #10b981; color: white; }
+    
+        /* High-Precision Print Styles for Canva-like Reports */
+        @media print {
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+            nav, header, .print\:hidden, #mobile-bottom-nav, #pwa-install-banner, #toast, .toast-message, #custom-category-dropdown, button {
+                display: none !important;
+            }
+            #view-reports {
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            #report-canvas-wrapper {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            #report-canvas {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 10px !important;
+                border-radius: 0 !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+        }
+
     </style>
 </head>
 <body class="h-full flex flex-col md:flex-row overflow-hidden bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300">
@@ -1127,6 +1158,9 @@ window.onunhandledrejection = function(event) {
             const pdfBtn = document.getElementById('btn-download-pdf');
             if(pdfBtn) pdfBtn.style.display = tabName === 'dashboard' ? 'flex' : 'none';
 
+            if (tabName === 'reports') {
+                renderReportView();
+            }
             if (tabName === 'dashboard') {
                 document.querySelectorAll('.chart-box').forEach(el => el.classList.remove('show'));
                 setTimeout(() => {
@@ -1228,6 +1262,332 @@ window.onunhandledrejection = function(event) {
                 updateCategoryDropdownText();
             }
         }
+
+        
+        // --- REPORTS TAB LOGIC & CANVA PRINT CANVAS ---
+        let reportChartInstance = null;
+
+        function handleReportDatePresetChange() {
+            const val = document.getElementById('rpt-date-preset') ? document.getElementById('rpt-date-preset').value : 'this_month';
+            const customDiv = document.getElementById('rpt-custom-date-container');
+            if (customDiv) {
+                if (val === 'custom') {
+                    customDiv.classList.remove('hidden');
+                } else {
+                    customDiv.classList.add('hidden');
+                    renderReportView();
+                }
+            }
+        }
+
+        function getReportFilteredTransactions() {
+            const preset = document.getElementById('rpt-date-preset') ? document.getElementById('rpt-date-preset').value : 'this_month';
+            const typeFilter = document.getElementById('rpt-type-filter') ? document.getElementById('rpt-type-filter').value : 'all';
+            
+            let filtered = [...state.transactions];
+            const now = new Date();
+            
+            if (preset === 'this_month') {
+                const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+                const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+                filtered = filtered.filter(t => {
+                    const d = new Date(t.date);
+                    return d >= startOfMonth && d <= endOfMonth;
+                });
+            } else if (preset === 'last_month') {
+                const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+                filtered = filtered.filter(t => {
+                    const d = new Date(t.date);
+                    return d >= startOfLastMonth && d <= endOfLastMonth;
+                });
+            } else if (preset === 'this_year') {
+                const startOfYear = new Date(now.getFullYear(), 0, 1);
+                const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
+                filtered = filtered.filter(t => {
+                    const d = new Date(t.date);
+                    return d >= startOfYear && d <= endOfYear;
+                });
+            } else if (preset === 'custom') {
+                const sVal = document.getElementById('rpt-start-date') ? document.getElementById('rpt-start-date').value : '';
+                const eVal = document.getElementById('rpt-end-date') ? document.getElementById('rpt-end-date').value : '';
+                if (sVal) {
+                    filtered = filtered.filter(t => new Date(t.date) >= new Date(sVal));
+                }
+                if (eVal) {
+                    const endD = new Date(eVal);
+                    endD.setHours(23, 59, 59);
+                    filtered = filtered.filter(t => new Date(t.date) <= endD);
+                }
+            }
+
+            if (typeFilter !== 'all') {
+                filtered = filtered.filter(t => t.type === typeFilter);
+            }
+
+            filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+            return filtered;
+        }
+
+        function renderReportView() {
+            const txs = getReportFilteredTransactions();
+            const mode = document.getElementById('rpt-currency-mode') ? document.getElementById('rpt-currency-mode').value : 'MERGED_KHR';
+            
+            const preset = document.getElementById('rpt-date-preset') ? document.getElementById('rpt-date-preset').value : 'this_month';
+            const subTitleEl = document.getElementById('rpt-canvas-subtitle');
+            const badgeEl = document.getElementById('rpt-canvas-badge');
+            const printedAtEl = document.getElementById('rpt-canvas-printed-at');
+            
+            if (printedAtEl) {
+                const nowStr = new Date().toLocaleDateString('km-KH', { year: 'numeric', month: 'long', day: 'numeric' });
+                printedAtEl.innerText = `បង្កើតនៅថ្ងៃ៖ ${nowStr}`;
+            }
+
+            if (subTitleEl && badgeEl) {
+                if (preset === 'this_month') {
+                    subTitleEl.innerText = `របាយការណ៍ប្រចាំខែនេះ (${new Date().toLocaleDateString('km-KH', { month: 'long', year: 'numeric' })})`;
+                    badgeEl.innerText = 'របាយការណ៍ប្រចាំខែ';
+                } else if (preset === 'last_month') {
+                    const lm = new Date(); lm.setMonth(lm.getMonth() - 1);
+                    subTitleEl.innerText = `របាយការណ៍ប្រចាំខែមុន (${lm.toLocaleDateString('km-KH', { month: 'long', year: 'numeric' })})`;
+                    badgeEl.innerText = 'របាយការណ៍ប្រចាំខែ';
+                } else if (preset === 'this_year') {
+                    subTitleEl.innerText = `របាយការណ៍ប្រចាំឆ្នាំ ${new Date().getFullYear()}`;
+                    badgeEl.innerText = 'របាយការណ៍ប្រចាំឆ្នាំ';
+                } else if (preset === 'all') {
+                    subTitleEl.innerText = `របាយការណ៍រួមសរុបទាំងអស់`;
+                    badgeEl.innerText = 'របាយការណ៍សរុប';
+                } else {
+                    const s = (document.getElementById('rpt-start-date') && document.getElementById('rpt-start-date').value) || '-';
+                    const e = (document.getElementById('rpt-end-date') && document.getElementById('rpt-end-date').value) || '-';
+                    subTitleEl.innerText = `ចាប់ពីថ្ងៃ ${s} ដល់ថ្ងៃ ${e}`;
+                    badgeEl.innerText = 'របាយការណ៍តាមកាលបរិច្ឆេទ';
+                }
+            }
+
+            let inc = 0, exp = 0;
+            txs.forEach(t => {
+                let val = parseFloat(t.amount);
+                if (mode === 'MERGED_KHR') {
+                    if (t.currency === 'USD') val = val * 4000;
+                } else if (mode === 'MERGED_USD') {
+                    if (t.currency === 'KHR') val = val / 4000;
+                } else if (mode === 'KHR') {
+                    if (t.currency !== 'KHR') return;
+                } else if (mode === 'USD') {
+                    if (t.currency !== 'USD') return;
+                }
+
+                if (t.type === 'income') inc += val;
+                else if (t.type === 'expense') exp += val;
+            });
+
+            const currSymbol = (mode === 'MERGED_USD' || mode === 'USD') ? 'USD' : 'KHR';
+            const incEl = document.getElementById('rpt-total-income');
+            const expEl = document.getElementById('rpt-total-expense');
+            if (incEl) incEl.innerText = formatMoney(inc, currSymbol);
+            if (expEl) expEl.innerText = formatMoney(exp, currSymbol);
+            
+            const bal = inc - exp;
+            const balEl = document.getElementById('rpt-total-balance');
+            if (balEl) {
+                balEl.innerText = formatMoney(bal, currSymbol);
+                balEl.className = bal >= 0 ? "text-base md:text-xl font-black text-emerald-600 dark:text-emerald-400 print:text-emerald-700 mt-1" : "text-base md:text-xl font-black text-rose-600 dark:text-rose-400 print:text-rose-700 mt-1";
+            }
+
+            renderReportCategoryBreakdown(txs, mode, currSymbol);
+            renderReportTransactionsTable(txs, mode, currSymbol);
+        }
+
+        function renderReportCategoryBreakdown(txs, mode, currSymbol) {
+            const catMap = {};
+            let grandTotal = 0;
+
+            txs.forEach(t => {
+                let val = parseFloat(t.amount);
+                if (mode === 'MERGED_KHR') {
+                    if (t.currency === 'USD') val = val * 4000;
+                } else if (mode === 'MERGED_USD') {
+                    if (t.currency === 'KHR') val = val / 4000;
+                } else if (mode === 'KHR') {
+                    if (t.currency !== 'KHR') return;
+                } else if (mode === 'USD') {
+                    if (t.currency !== 'USD') return;
+                }
+
+                const cat = state.categories.find(c => c.id === t.categoryId) || { name: 'ផ្សេងៗ', icon: 'fa-tags', color: 'slate', type: t.type };
+                if (!catMap[t.categoryId]) {
+                    catMap[t.categoryId] = { name: cat.name, icon: cat.icon, color: cat.color, type: cat.type, amount: 0 };
+                }
+                catMap[t.categoryId].amount += val;
+                grandTotal += val;
+            });
+
+            const catArray = Object.values(catMap).sort((a, b) => b.amount - a.amount);
+
+            const legendContainer = document.getElementById('rpt-category-legend-list');
+            if (legendContainer) {
+                if (catArray.length === 0) {
+                    legendContainer.innerHTML = '<p class="text-slate-400 text-center py-4">គ្មានទិន្នន័យប្រភេទទេ</p>';
+                } else {
+                    let html = '';
+                    catArray.forEach(item => {
+                        const pct = grandTotal > 0 ? ((item.amount / grandTotal) * 100).toFixed(1) : '0';
+                        const colHex = (COLOR_MAPS[item.color] && COLOR_MAPS[item.color].hex) ? COLOR_MAPS[item.color].hex : '#10b981';
+                        const typeBadge = item.type === 'income' ? '<span class="text-[9px] bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300 px-1.5 py-0.5 rounded font-bold">ចំណូល</span>' : '<span class="text-[9px] bg-rose-100 text-rose-600 dark:bg-rose-900/40 dark:text-rose-300 px-1.5 py-0.5 rounded font-bold">ចំណាយ</span>';
+                        
+                        html += `
+                            <div class="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-800/80 print:bg-white border border-slate-100 dark:border-slate-700/50 print:border-slate-200">
+                                <div class="flex items-center space-x-2 truncate">
+                                    <span class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${colHex}"></span>
+                                    <i class="fa-solid ${item.icon} text-slate-500 dark:text-slate-400"></i>
+                                    <span class="font-bold text-slate-800 dark:text-slate-200 print:text-black truncate">${item.name}</span>
+                                    ${typeBadge}
+                                </div>
+                                <div class="text-right flex-shrink-0 ml-2">
+                                    <span class="font-black text-slate-900 dark:text-white print:text-black">${formatMoney(item.amount, currSymbol)}</span>
+                                    <span class="text-[10px] text-slate-400 dark:text-slate-500 print:text-slate-600 ml-1">(${pct}%)</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    legendContainer.innerHTML = html;
+                }
+            }
+
+            const canvas = document.getElementById('reportCategoryChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            if (reportChartInstance) {
+                reportChartInstance.destroy();
+            }
+
+            if (catArray.length === 0) return;
+
+            const labels = catArray.map(c => c.name);
+            const dataValues = catArray.map(c => c.amount);
+            const bgColors = catArray.map(c => (COLOR_MAPS[c.color] && COLOR_MAPS[c.color].hex) ? COLOR_MAPS[c.color].hex : '#10b981');
+
+            reportChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataValues,
+                        backgroundColor: bgColors,
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        function getDayOnly(dateStr) {
+            if (!dateStr) return '-';
+            if (dateStr.includes('-')) {
+                const parts = dateStr.split('-');
+                if (parts.length === 3) return parseInt(parts[2], 10).toString();
+            }
+            if (dateStr.includes('.')) {
+                const parts = dateStr.split('.');
+                if (parts.length === 3) return parseInt(parts[0], 10).toString();
+            }
+            if (dateStr.includes('/')) {
+                const parts = dateStr.split('/');
+                if (parts.length === 3) return parseInt(parts[0], 10).toString();
+            }
+            return dateStr;
+        }
+
+        function renderReportTransactionsTable(txs, mode, currSymbol) {
+            const tbody = document.getElementById('rpt-transactions-tbody');
+            const countEl = document.getElementById('rpt-tx-count');
+            if (countEl) countEl.innerText = `សរុប ${txs.length} ប្រតិបត្តិការ`;
+            if (!tbody) return;
+
+            if (txs.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-8 text-center text-slate-400 dark:text-slate-500">
+                            <i class="fa-solid fa-inbox text-3xl mb-2 block"></i>
+                            គ្មានប្រតិបត្តិការក្នុងអំឡុងពេលនេះទេ
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            let html = '';
+            txs.forEach(t => {
+                const day = getDayOnly(t.date); // ONLY DAY NUMBER (e.g. 21, 5, 14) - saves space!
+                const cat = state.categories.find(c => c.id === t.categoryId) || { name: 'ផ្សេងៗ', icon: 'fa-tags', color: 'slate' };
+                
+                let amtVal = parseFloat(t.amount);
+                let displayAmtStr = '';
+
+                if (mode === 'MERGED_KHR') {
+                    if (t.currency === 'USD') amtVal = amtVal * 4000;
+                    displayAmtStr = formatMoney(amtVal, 'KHR');
+                } else if (mode === 'MERGED_USD') {
+                    if (t.currency === 'KHR') amtVal = amtVal / 4000;
+                    displayAmtStr = formatMoney(amtVal, 'USD');
+                } else {
+                    displayAmtStr = formatMoney(t.amount, t.currency);
+                }
+
+                const isInc = t.type === 'income';
+                const amtColor = isInc ? 'text-emerald-600 dark:text-emerald-400 print:text-emerald-700 font-bold' : 'text-rose-600 dark:text-rose-400 print:text-rose-700 font-bold';
+                const flowBadge = isInc ? '<span class="text-[10px] bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 print:bg-emerald-50 print:text-emerald-800 px-2 py-0.5 rounded-full font-bold">ចំណូល</span>' : '<span class="text-[10px] bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 print:bg-rose-50 print:text-rose-800 px-2 py-0.5 rounded-full font-bold">ចំណាយ</span>';
+
+                html += `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 print:hover:bg-transparent transition-colors border-b border-slate-100 dark:border-slate-800/50">
+                        <td class="py-2.5 px-3 text-center font-black text-slate-700 dark:text-slate-300 print:text-black bg-slate-50/50 dark:bg-slate-800/30 print:bg-slate-100">${day}</td>
+                        <td class="py-2.5 px-3 font-semibold text-slate-800 dark:text-slate-200 print:text-black">
+                            <span class="inline-flex items-center space-x-1.5">
+                                <i class="fa-solid ${cat.icon} text-slate-400"></i>
+                                <span>${cat.name}</span>
+                            </span>
+                        </td>
+                        <td class="py-2.5 px-3">${flowBadge}</td>
+                        <td class="py-2.5 px-3 text-right ${amtColor}">${displayAmtStr}</td>
+                        <td class="py-2.5 px-3 text-slate-500 dark:text-slate-400 print:text-slate-700 truncate max-w-[180px]">${t.description || '-'}</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        function printReportCanvas() {
+            window.print();
+        }
+
+        function exportReportPdf() {
+            const element = document.getElementById('report-canvas');
+            if (!element) return;
+            const opt = {
+                margin:       [8, 8, 8, 8],
+                filename:     `Financial_Report_${new Date().toISOString().split('T')[0]}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, logging: false },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            if (typeof html2pdf !== 'undefined') {
+                html2pdf().set(opt).from(element).save();
+            } else {
+                window.print();
+            }
+        }
+
 
         function renderAll() {
             renderDashboard();
