@@ -2582,7 +2582,7 @@ window.onunhandledrejection = function(event) {
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
+                navigator.serviceWorker.register('./sw.js?v=4.0')
                     .then((reg) => { console.log('Service Worker Registered:', reg.scope); reg.update(); })
                     .catch((err) => console.log('Service Worker Error:', err));
             });
